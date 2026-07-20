@@ -1,0 +1,8 @@
+# File output & data yang tidak perlu masuk ke dalam image
+output-*/
+db.json
+report.csv
+report.xlsx
+.git/
+__pycache__/
+*.pyc

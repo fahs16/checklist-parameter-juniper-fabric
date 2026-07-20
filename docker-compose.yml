@@ -1,0 +1,21 @@
+# =============================================================================
+# docker-compose untuk mempermudah operasional.
+# Semua file di folder ini di-mount ke /app di dalam container, jadi:
+#   - command.txt & device_cred.txt dibaca langsung dari host
+#   - db.json, report.csv, report.xlsx muncul langsung di host setelah run
+#
+# Cara pakai (di server):
+#   docker compose run --rm checklist
+# =============================================================================
+
+services:
+  checklist:
+    image: juniper-checklist:latest
+    build: .
+    container_name: juniper-checklist
+    # Mount folder project ke /app supaya input/output ada di host
+    volumes:
+      - ./:/app
+    # Timestamp output ikut WIB
+    environment:
+      - TZ=Asia/Jakarta
