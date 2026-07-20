@@ -1,5 +1,6 @@
 import paramiko
 import os
+import shutil
 from datetime import datetime
 #import pytz
 import json
@@ -716,6 +717,19 @@ def merge_to_db(existing_db, new_data):
 
     return existing_db
 
+def archive_and_cleanup(output_dir):
+    """Compress folder output-<timestamp> jadi .zip lalu hapus folder aslinya
+    supaya tidak makan banyak space di server. File akhir (db.json, report.csv,
+    report.xlsx) ada di root, jadi tidak ikut terhapus."""
+    if not os.path.isdir(output_dir):
+        print(f"⚠️  Folder {output_dir} tidak ditemukan, skip archive.")
+        return None
+    # make_archive otomatis menambahkan ekstensi .zip
+    archive_path = shutil.make_archive(output_dir, "zip", output_dir)
+    shutil.rmtree(output_dir)
+    print(f"🗜️  Output dikompres ke {archive_path} dan folder {output_dir} dihapus.")
+    return archive_path
+
 # === MAIN ===
 command_list=load_command_list("command.txt")
 
@@ -1061,3 +1075,7 @@ if checklist_param == 11:
     # Contoh pemanggilan
     export_db_to_csv("db.json", "report.csv")
     export_db_to_excel("db.json", "report.xlsx")
+
+# Kompres folder output-<timestamp> lalu hapus supaya hemat space.
+# Dijalankan paling akhir, setelah semua proses & report selesai.
+archive_and_cleanup(output_dir)
