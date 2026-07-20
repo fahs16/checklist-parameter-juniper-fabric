@@ -1,5 +1,6 @@
 # File output & data yang tidak perlu masuk ke dalam image
 output-*/
+output-*.zip
 db.json
 report.csv
 report.xlsx

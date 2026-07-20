@@ -83,7 +83,16 @@ docker compose run --rm checklist
 Folder project otomatis di-mount ke `/app`, jadi `command.txt` &
 `device_cred.txt` dibaca dari host, dan `report.xlsx` langsung muncul di host.
 
-### Opsi B — pakai docker run biasa
+### Opsi B — pakai script ./run.sh (paling praktis untuk docker biasa)
+
+```bash
+./run.sh
+```
+
+`run.sh` otomatis: cek image (build kalau belum ada & ada internet), cek file
+input, lalu `docker run` dengan mount folder. Cocok untuk operasional harian.
+
+### Opsi C — pakai docker run manual
 
 ```bash
 docker run --rm \
@@ -120,6 +129,12 @@ Tinggal `scp` ke laptop untuk dibuka di Excel:
 ```bash
 scp user@server:/path/ke/project/report.xlsx .
 ```
+
+> Hemat space: folder mentah `output-<timestamp>/` otomatis **dikompres jadi
+> `output-<timestamp>.zip` lalu dihapus** di akhir run (lihat fungsi
+> `archive_and_cleanup` di `script.py`). Jadi yang tersisa di server cuma
+> `report.xlsx`, `report.csv`, `db.json`, dan file `.zip` kecil — bukan ribuan
+> file txt/json.
 
 > Catatan: `report.xlsx` hanya digenerate kalau **semua 11 parameter checklist**
 > terpenuhi (semua command wajib ada di `command.txt`). Kalau belum lengkap,
